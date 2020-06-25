@@ -2,7 +2,6 @@ package ch.ge.geomatique.geoevent.transport.ftp;
 
 import java.io.BufferedOutputStream;
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -13,13 +12,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.regex.Pattern;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
@@ -74,15 +70,7 @@ public class FTPInboundTransport extends InboundTransportBase implements Runnabl
 	static final String CASTOR = "castor";
 	static final String SIEMENS = "siemens";
 	static final String SQL_EXCEPTION_DELETE_FILE = "FTP connector. Impossible to delete file : ";
-	static final String FILE_NAME = "fileName";
-	static final String LOCAL_FOLDER = "localFolder";
-	static final String NUMBER_OF_LINES_TO_SKIP = "numberOfLinesToSkip";
-	static final String PASSWORD_STRING = "password";
-	static final String PRIVATE_KEY = "privateKey";
-	static final String SENSOR_TYPE = "sensorType";
-	static final String SERVER_STRING = "server";
-	static final String SERVER_FOLDER = "serverFolder";
-	static final String SERVER_TYPE = "serverType";
+
 	static final int RETURN_CHAR = 10;
 	static final int PERIOD = 60000;
 	static final int THIRTY_SECONDS = 30;
@@ -145,95 +133,29 @@ public class FTPInboundTransport extends InboundTransportBase implements Runnabl
   {
     LOGGER.info("reading properties");
     
-    // Get server type property
-    if (getProperty(SERVER_TYPE).isValid() && getProperty(SERVER_TYPE).getValue() != null)
-    {
-      String value = (String) getProperty(SERVER_TYPE).getValue();
-      if (value.length() > 0 && !value.equals(serverType))
-      {
-        serverType = value;
-      }
-    }
+    serverType = properties.get("serverType").getValueAsString();
+    server = properties.get("server").getValueAsString();
+    
+    if (properties.get("user").getValueAsString() != null)
+    	user = properties.get("user").getValueAsString();
 
-    // Get server name property
-    if (getProperty(SERVER_STRING).isValid() && getProperty(SERVER_STRING).getValue() != null)
-    {
-      String value = (String) getProperty(SERVER_STRING).getValue();
-      if (value.length() > 0 && !value.equals(server))
-      {
-        server = value;
-      }
-    }
+    if (properties.get("password").getValueAsString() != null)
+    	password = properties.get("password").getValueAsString();
 
-    // Get user name property
-    if (getProperty("user").isValid() && getProperty("user").getValue() != null)
-    {
-      String value = (String) getProperty("user").getValue();
-      if (value.length() > 0 && !value.equals(user))
-      {
-        user = value;
-      }
-    }
+    if (properties.get("serverFolder").getValueAsString() != null)
+    	serverFolder = properties.get("serverFolder").getValueAsString();
+    
+    if (properties.get("privateKey").getValueAsString() != null)
+    	privateKey = properties.get("privateKey").getValueAsString();
 
-    // Get password property
-    if (getProperty(PASSWORD_STRING).isValid() && getProperty(PASSWORD_STRING).getValue() != null)
-    {
-      String value = (String) getProperty(PASSWORD_STRING).getValue();
-      if (value.length() > 0 && !value.equals(password))
-      {
-        password = value;
-      }
-    }
-
-    // Get server folder property
-    if (getProperty(SERVER_FOLDER).isValid() && getProperty(SERVER_FOLDER).getValue() != null)
-    {
-      String value = (String) getProperty(SERVER_FOLDER).getValue();
-      if (value.length() > 0 && !value.equals(serverFolder))
-      {
-        serverFolder = value;
-      }
-    }
-
-    // Get private key property
-    if (getProperty(PRIVATE_KEY).isValid() && getProperty(PRIVATE_KEY).getValue() != null)
-    {
-      String value = (String) getProperty(PRIVATE_KEY).getValue();
-      if (value.length() > 0 && !value.equals(privateKey))
-      {
-        privateKey = value;
-      }
-    }
-
-    // Get file name property
-    if (getProperty(FILE_NAME).isValid() && getProperty(FILE_NAME).getValue() != null)
-    {
-      String value = (String) getProperty(FILE_NAME).getValue();
-      if (value.length() > 0 && !value.equals(fileName))
-      {
-        fileName = value;
-      }
-    }
-
-    // Get local folder property
-    if (getProperty(LOCAL_FOLDER).isValid() && getProperty(LOCAL_FOLDER).getValue() != null)
-    {
-      String value = (String) getProperty(LOCAL_FOLDER).getValue();
-      if (value.length() > 0 && !value.equals(localFolder))
-      {
-        localFolder = value;
-      }
-    }
-
-    // Get period property
-    if (getProperty(NUMBER_OF_LINES_TO_SKIP).isValid() && getProperty(NUMBER_OF_LINES_TO_SKIP).getValue() != null)
-    {
-      int value = (Integer) getProperty(NUMBER_OF_LINES_TO_SKIP).getValue();
-      if (value > 0 && value != numberOfLinesToSkip)
-      {
-        numberOfLinesToSkip = value;
-      }
-    }
+    if (properties.get("fileName").getValueAsString() != null)
+    	fileName = properties.get("fileName").getValueAsString();
+    
+    if (properties.get("localFolder").getValueAsString() != null)
+    	localFolder = properties.get("localFolder").getValueAsString();
+    
+    if (properties.get("numberOfLinesToSkip").getValue() != null)
+    	numberOfLinesToSkip = (Integer) properties.get("numberOfLinesToSkip").getValue();
     
   }
 
