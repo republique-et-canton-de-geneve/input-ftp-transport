@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<transport name="ftp-transport" domain="com.esri.geoevent.transport.inbound"	type="inbound">
+	<description>Castor Siemens FTP Transport.</description>
+	<propertyDefinitions>
+			
+		<propertyDefinition propertyName="serverType"
+			label="Server type"
+			description="Type of the server : ftp or sftp"
+			propertyType="String" mandatory="true" readOnly="false" defaultValue="ftp" />
+
+		<propertyDefinition propertyName="server"
+			label="Server"
+			description="Name of the ftp server"
+			propertyType="String" mandatory="true" readOnly="false" defaultValue="" />
+
+		<propertyDefinition propertyName="user"
+			label="User"
+			description="Login user name"
+			propertyType="String" mandatory="false" readOnly="false"
+			defaultValue="" />
+
+		<propertyDefinition propertyName="password"
+			label="Password"
+			description="User password"
+			propertyType="String" mandatory="false" readOnly="false"
+			defaultValue="" />
+
+		<propertyDefinition propertyName="serverFolder"
+			label="Server folder"
+			description="Folder on the server where the file is stored"
+			propertyType="String" mandatory="false" readOnly="false"
+			defaultValue="" />
+
+		<propertyDefinition propertyName="privateKey"
+			label="Private key"
+			description="The private key used to authenticate into the ssh server"
+			propertyType="String" mandatory="false" readOnly="false"
+			defaultValue="" />
+
+		<propertyDefinition propertyName="fileName"
+			label="File name"
+			description="Name of the file that will be downloaded"
+			propertyType="String" mandatory="true" readOnly="false" defaultValue="" />
+
+		<propertyDefinition propertyName="localFolder"
+			label="Local folder"
+			description="Folder where the file will be downloaded"
+			propertyType="String" mandatory="true" readOnly="false" defaultValue="" />
+		
+		<propertyDefinition propertyName="numberOfLinesToSkip"
+			label="Number of lines to skip"
+			description="Number of lines to skip"
+			propertyType="Integer" mandatory="true" readOnly="false" defaultValue="0" />
+
+	</propertyDefinitions>
+</transport>

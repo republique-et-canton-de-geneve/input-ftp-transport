@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>ch.ge.geomatique.geoevent</groupId>
+		<artifactId>geoevent_parent</artifactId>
+		<version>1.1</version>
+	</parent>
+
+	<groupId>ch.ge.geomatique.geoevent.transport</groupId>
+	<artifactId>input-ftp-transport</artifactId>
+	<name>FTP transport</name>
+	<version>1.0-SNAPSHOT</version>
+
+	<dependencies>
+		<dependency>
+			<groupId>commons-net</groupId>
+			<artifactId>commons-net</artifactId>
+			<version>3.6</version>
+		</dependency>
+		<dependency>
+			<groupId>com.jcraft</groupId>
+			<artifactId>jsch</artifactId>
+			<version>0.1.55</version>
+		</dependency>
+	</dependencies>
+	
+	<scm>
+	  <connection>scm:git:https://prod.etat-ge.ch/gitlab/DEVELOPPEUR-GEOMATIQUE/geoevent/connecteur/infomobilite/input-ftp-transport.git</connection>
+	  <developerConnection>scm:git:https://prod.etat-ge.ch/gitlab/DEVELOPPEUR-GEOMATIQUE/geoevent/connecteur/infomobilite/input-ftp-transport.git</developerConnection>
+	  <url>https://prod.etat-ge.ch/gitlab/DEVELOPPEUR-GEOMATIQUE/geoevent/connecteur/infomobilite/input-ftp-transport.git</url>
+	  <tag>HEAD</tag>
+	</scm>
+</project>
