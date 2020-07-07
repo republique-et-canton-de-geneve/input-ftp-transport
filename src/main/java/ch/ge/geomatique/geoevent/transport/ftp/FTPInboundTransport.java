@@ -69,12 +69,9 @@ public class FTPInboundTransport extends InboundTransportBase implements Runnabl
   private int frequency = 0;
   // Number of lines to skip in the downloaded file
   private int numberOfLinesToSkip = 0;
-	static final String CASTOR = "castor";
-	static final String SIEMENS = "siemens";
 	static final String SQL_EXCEPTION_DELETE_FILE = "FTP connector. Impossible to delete file : ";
 
 	static final int RETURN_CHAR = 10;
-	static final int THIRTY_SECONDS = 30;
 
 	
   Timer timer;
@@ -182,8 +179,8 @@ public class FTPInboundTransport extends InboundTransportBase implements Runnabl
 
       timer = new Timer();
 
-      // Get the current time with 30 seconds
-      LocalDateTime date = LocalDateTime.now().withSecond(THIRTY_SECONDS);
+      // Get the current time
+      LocalDateTime date = LocalDateTime.now();
       
       timer.scheduleAtFixedRate(running, Date.from(date.atZone(ZoneId.systemDefault()).toInstant()), frequency * 1000);
 
