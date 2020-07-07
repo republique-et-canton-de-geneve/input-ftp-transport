@@ -47,6 +47,11 @@
 			description="Folder where the file will be downloaded"
 			propertyType="String" mandatory="true" readOnly="false" defaultValue="" />
 		
+		<propertyDefinition propertyName="frequency"
+			label="Frequency"
+			description="This is the time in seconds between successive task executions"
+			propertyType="Integer" mandatory="true" readOnly="false" defaultValue="60" />
+			
 		<propertyDefinition propertyName="numberOfLinesToSkip"
 			label="Number of lines to skip"
 			description="Number of lines to skip"

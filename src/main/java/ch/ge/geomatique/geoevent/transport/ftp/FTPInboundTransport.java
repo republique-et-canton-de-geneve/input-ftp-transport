@@ -65,6 +65,8 @@ public class FTPInboundTransport extends InboundTransportBase implements Runnabl
   private String privateKey = "";
   // Folder where the file will be downloaded
   private String localFolder = "";
+  // This is the time in seconds between successive task executions
+  private int frequency = 0;
   // Number of lines to skip in the downloaded file
   private int numberOfLinesToSkip = 0;
 	static final String CASTOR = "castor";
@@ -72,7 +74,6 @@ public class FTPInboundTransport extends InboundTransportBase implements Runnabl
 	static final String SQL_EXCEPTION_DELETE_FILE = "FTP connector. Impossible to delete file : ";
 
 	static final int RETURN_CHAR = 10;
-	static final int PERIOD = 60000;
 	static final int THIRTY_SECONDS = 30;
 
 	
@@ -154,6 +155,9 @@ public class FTPInboundTransport extends InboundTransportBase implements Runnabl
     if (properties.get("localFolder").getValueAsString() != null)
     	localFolder = properties.get("localFolder").getValueAsString();
     
+    if (properties.get("frequency").getValue() != null)
+    	frequency = (Integer) properties.get("frequency").getValue();
+    
     if (properties.get("numberOfLinesToSkip").getValue() != null)
     	numberOfLinesToSkip = (Integer) properties.get("numberOfLinesToSkip").getValue();
     
@@ -181,7 +185,7 @@ public class FTPInboundTransport extends InboundTransportBase implements Runnabl
       // Get the current time with 30 seconds
       LocalDateTime date = LocalDateTime.now().withSecond(THIRTY_SECONDS);
       
-      timer.scheduleAtFixedRate(running, Date.from(date.atZone(ZoneId.systemDefault()).toInstant()), PERIOD);
+      timer.scheduleAtFixedRate(running, Date.from(date.atZone(ZoneId.systemDefault()).toInstant()), frequency * 1000);
 
     } catch (Exception ex)
     {
