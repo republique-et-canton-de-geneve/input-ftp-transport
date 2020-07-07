@@ -330,8 +330,9 @@ public class FTPInboundTransport extends InboundTransportBase implements Runnabl
 
        // download and remove the file
        sftpChannel.get(remotefileName, localFolder + fileName);
-       sftpChannel.rm(remotefileName);
        receive(localFolder + fileName);
+       File downloadFile = new File(localFolder  + fileName);
+       downloadFile.delete();
 
      } catch (SftpException | JSchException ex)
      {
