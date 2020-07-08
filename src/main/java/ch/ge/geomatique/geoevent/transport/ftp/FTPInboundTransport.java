@@ -156,8 +156,9 @@ public class FTPInboundTransport extends InboundTransportBase implements Runnabl
     if (properties.get("privateKey").getValueAsString() != null)
     	privateKey = properties.get("privateKey").getValueAsString();
 
+    // Use FileNameUtils getName to prevent 'Path Traversal' security issue
     if (properties.get("fileName").getValueAsString() != null)
-    	fileName = properties.get("fileName").getValueAsString();
+    	fileName = FilenameUtils.getName(properties.get("fileName").getValueAsString());
     
     if (properties.get("localFolder").getValueAsString() != null)
     	localFolder = properties.get("localFolder").getValueAsString();
@@ -340,7 +341,7 @@ public class FTPInboundTransport extends InboundTransportBase implements Runnabl
      // download and remove the file
      sftpChannel.get(remotefileName, localFilename);
      receive(localFilename);
-     Files.delete(Paths.get(FilenameUtils.getName(localFilename)));
+     Files.delete(Paths.get(localFilename));
      
      }
      catch (Exception e)
