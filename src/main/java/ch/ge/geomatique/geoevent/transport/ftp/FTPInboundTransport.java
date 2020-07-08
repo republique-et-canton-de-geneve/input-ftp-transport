@@ -182,7 +182,7 @@ public class FTPInboundTransport extends InboundTransportBase implements Runnabl
       // Get the current time
       LocalDateTime date = LocalDateTime.now();
       
-      timer.scheduleAtFixedRate(running, Date.from(date.atZone(ZoneId.systemDefault()).toInstant()), frequency * 1000);
+      timer.scheduleAtFixedRate(running, Date.from(date.atZone(ZoneId.systemDefault()).toInstant()), frequency * 1000L);
 
     } catch (Exception ex)
     {
