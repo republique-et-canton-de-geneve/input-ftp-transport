@@ -252,7 +252,9 @@ public class FTPInboundTransport extends InboundTransportBase implements Runnabl
       if (success)
       {
         receive(localFolder + fileName);
-        downloadFile.delete();
+        
+        if (!downloadFile.delete())
+          LOGGER.error("FTP Transport Exception error. Impossible to delete local file.");
       }
 
       ftp.logout();
@@ -329,7 +331,9 @@ public class FTPInboundTransport extends InboundTransportBase implements Runnabl
      sftpChannel.get(remotefileName, localFilename);
      receive(localFilename);
      File downloadFile = new File(localFilename);
-     downloadFile.delete();
+     
+     if (!downloadFile.delete())
+       LOGGER.error("SFTP Transport Exception error. Impossible to delete local file.");
 
      }
      catch (Exception e)
