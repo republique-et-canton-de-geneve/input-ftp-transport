@@ -156,7 +156,7 @@ public class FTPInboundTransport extends InboundTransportBase implements Runnabl
     if (properties.get("privateKey").getValueAsString() != null)
     	privateKey = properties.get("privateKey").getValueAsString();
 
-    // Use FileNameUtils getName to prevent 'Path Traversal' security issue
+    // Use FileNameUtils getName to prevent 'Path Traversal security issue
     if (properties.get("fileName").getValueAsString() != null)
     	fileName = FilenameUtils.getName(properties.get("fileName").getValueAsString());
     
@@ -227,7 +227,7 @@ public class FTPInboundTransport extends InboundTransportBase implements Runnabl
     int reply;
     FTPClient ftp = new FTPClient();
     	
-    try
+    try 
     {
       // Connect to the server
       ftp.connect(server);
