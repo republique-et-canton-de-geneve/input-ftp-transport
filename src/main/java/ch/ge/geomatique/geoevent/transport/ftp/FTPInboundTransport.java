@@ -30,10 +30,8 @@ import com.esri.ges.transport.InboundTransportBase;
 import com.esri.ges.transport.TransportDefinition;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpATTRS;
-import com.jcraft.jsch.SftpException;
 
 
 /**
@@ -287,7 +285,8 @@ public class FTPInboundTransport extends InboundTransportBase implements Runnabl
  private void downloadSFTPFile()
  {
    Session session = null;
-
+   ChannelSftp sftpChannel = null;
+   
    LOGGER.info("Downloading SFTP file");
    
    try
@@ -306,59 +305,49 @@ public class FTPInboundTransport extends InboundTransportBase implements Runnabl
 
      session.connect();
 
-     ChannelSftp sftpChannel = null;
+     String remotefileName = serverFolder + fileName;
+
+     sftpChannel = (ChannelSftp) session.openChannel("sftp");
+     sftpChannel.connect();
+
+     SftpATTRS attr = null;
+
+     // Test if the file exists
      try
      {
-       String remotefileName = serverFolder + fileName;
+       attr = sftpChannel.stat(remotefileName);
+     } catch (Exception e)
+     {;}
 
-       sftpChannel = (ChannelSftp) session.openChannel("sftp");
-       sftpChannel.connect();
+     // If the file doesn't exist, exit
+     if (attr == null)
+       return;
 
-       SftpATTRS attr = null;
+     String localFilename = localFolder + fileName;
+     
+     // download and remove the file
+     sftpChannel.get(remotefileName, localFilename);
+     receive(localFilename);
+     File downloadFile = new File(localFilename);
+     downloadFile.delete();
 
-       // Test if the file exists
-       try
-       {
-         attr = sftpChannel.stat(remotefileName);
-       } catch (Exception e)
-       {
-         ;
-       }
-
-       // If the file doesn't exist, exit
-       if (attr == null)
-         return;
-
-       String localFilename = localFolder + fileName;
-       
-       // download and remove the file
-       sftpChannel.get(remotefileName, localFilename);
-       receive(localFilename);
-       File downloadFile = new File(localFilename);
-       downloadFile.delete();
-
-     } catch (SftpException | JSchException ex)
+     }
+     catch (Exception e)
      {
-       LOGGER.error("SFTP Transport Exception error (server:" + server + ").", ex);
+       LOGGER.error("SFTP Transport Exception error (server:" + server + ").", e);
        stop();
        setRunningState(RunningState.ERROR);
-     } finally
+     }
+     finally
      {
        if (sftpChannel != null)
        {
          sftpChannel.disconnect();
        }
+       
+       if (session != null)
+       	session.disconnect();
      }
-
-   } catch (Exception e)
-   {
-     LOGGER.error("SFTP Transport Exception error (server:" + server + ").", e);
-     stop();
-     setRunningState(RunningState.ERROR);
-   } finally
-   {
-     session.disconnect();
-   }
 
  }
 
