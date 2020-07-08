@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
@@ -335,12 +336,12 @@ public class FTPInboundTransport extends InboundTransportBase implements Runnabl
        return;
 
      String localFilename = localFolder + fileName;
-     
+
      // download and remove the file
      sftpChannel.get(remotefileName, localFilename);
      receive(localFilename);
-     Files.delete(Paths.get(localFilename));
-
+     Files.delete(Paths.get(FilenameUtils.getName(localFilename)));
+     
      }
      catch (Exception e)
      {
