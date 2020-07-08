@@ -22,7 +22,7 @@
 		<propertyDefinition propertyName="password"
 			label="Password"
 			description="User password"
-			propertyType="String" mandatory="false" readOnly="false"
+			propertyType="Password" mandatory="false" readOnly="false"
 			defaultValue="" />
 
 		<propertyDefinition propertyName="serverFolder"

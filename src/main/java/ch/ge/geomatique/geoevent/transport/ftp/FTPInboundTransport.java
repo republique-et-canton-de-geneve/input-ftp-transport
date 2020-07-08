@@ -24,6 +24,7 @@ import org.apache.commons.net.ftp.FTPReply;
 
 import com.esri.ges.core.component.ComponentException;
 import com.esri.ges.core.component.RunningState;
+import com.esri.ges.core.property.Property;
 import com.esri.ges.framework.i18n.BundleLogger;
 import com.esri.ges.framework.i18n.BundleLoggerFactory;
 import com.esri.ges.transport.InboundTransportBase;
@@ -136,8 +137,17 @@ public class FTPInboundTransport extends InboundTransportBase implements Runnabl
     if (properties.get("user").getValueAsString() != null)
     	user = properties.get("user").getValueAsString();
 
-    if (properties.get("password").getValueAsString() != null)
-    	password = properties.get("password").getValueAsString();
+  	Property passwordProperty = getProperty("password");
+  	
+  	try
+  	{
+  		if (passwordProperty.getValueAsString() != null)
+  			password = passwordProperty.getDecryptedValue();
+		}
+  	catch (Exception e)
+  	{
+			LOGGER.error("FTP connector. Exception when decoding password : ", e);
+  	}
 
     if (properties.get("serverFolder").getValueAsString() != null)
     	serverFolder = properties.get("serverFolder").getValueAsString();
