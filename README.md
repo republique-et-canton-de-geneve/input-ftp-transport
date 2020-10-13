@@ -1,6 +1,7 @@
 # input-ftp-transport
 
-The input-ftp-transport allows to download data from a (s)ftp server. It has been tested with Geoevent server 10.6.0
+The input-ftp-transport allows to download data from a (s)ftp server. It has been tested with Geoevent server 10.6.0.
+It uses Apache Commons Net library to connect to ftp servers, and Jsch for sftp servers.
 
 It has the following properties :
 
