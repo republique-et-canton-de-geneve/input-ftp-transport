@@ -4,7 +4,7 @@ The input-ftp-transport allows to download data from a (s)ftp server. It has bee
 
 It has the following properties :
 
-| name | description |
+| Name | Description |
 | ------ | ------ |
 | Server type | Type of the server : ftp or sftp |
 | Server | URL of the ftp server |
