@@ -415,7 +415,7 @@ public class FTPInboundTransport extends InboundTransportBase implements Runnabl
       setRunningState(RunningState.ERROR);
     } catch (Exception e)
     {
-      LOGGER.error("UNEXPECTED_ERROR2", e);
+      LOGGER.error("UNEXPECTED_ERROR", e);
       stop();
       setRunningState(RunningState.ERROR);
     }
