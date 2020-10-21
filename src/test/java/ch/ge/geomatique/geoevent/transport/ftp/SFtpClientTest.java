@@ -8,6 +8,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.github.stefanbirkner.fakesftpserver.rule.FakeSftpServerRule;
@@ -21,8 +24,10 @@ import com.github.stefanbirkner.fakesftpserver.rule.FakeSftpServerRule;
 */
 public class SFtpClientTest
 {
-	@Rule
-	public final FakeSftpServerRule sftpServer = new FakeSftpServerRule().addUser("user", "password").setPort(22);
+		final static Logger logger = LoggerFactory.getLogger(SFtpClientTest.class);
+	
+		@Rule
+		public final FakeSftpServerRule sftpServer = new FakeSftpServerRule().addUser("user", "password").setPort(22);
 	
     private SFtpClient SFtpClient;
     
@@ -72,7 +77,7 @@ public class SFtpClientTest
 		}
 		catch (Exception e)
 		{
-			System.out.println("Exception during testDownloadFile:" + e);
+			logger.error("Exception when downloading file:", e);
 		}
 
 		File file = new File(localFolder + fileName);

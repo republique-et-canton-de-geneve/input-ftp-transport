@@ -14,6 +14,8 @@ import org.mockftpserver.fake.filesystem.DirectoryEntry;
 import org.mockftpserver.fake.filesystem.FileEntry;
 import org.mockftpserver.fake.filesystem.FileSystem;
 import org.mockftpserver.fake.filesystem.WindowsFakeFileSystem;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
 * The FtpClientTest class is a Junit test case which connects to a ftp server and downloads a file
@@ -24,7 +26,7 @@ import org.mockftpserver.fake.filesystem.WindowsFakeFileSystem;
 */
 public class FtpClientTest
 {
-
+		final static Logger logger = LoggerFactory.getLogger(FtpClientTest.class);
     private FakeFtpServer fakeFtpServer;
     
     private FtpClient ftpClient;
@@ -83,8 +85,7 @@ public class FtpClientTest
 		}
 		catch (IOException e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Exception when downloading file:", e);
 		}
 
 		File file = new File(localFolder + fileName);
