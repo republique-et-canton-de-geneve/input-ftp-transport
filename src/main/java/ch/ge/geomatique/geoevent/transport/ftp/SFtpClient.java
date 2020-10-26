@@ -44,64 +44,62 @@ public class SFtpClient
   
   public void downloadFile() throws Exception
   {
+    Session session = null;
+    ChannelSftp sftpChannel = null;
+    
+    try
     {
-      Session session = null;
-      ChannelSftp sftpChannel = null;
-      
+      JSch.setConfig("StrictHostKeyChecking", "no");
+      JSch sshClient = new JSch();
+
+      // Connect to the sftp server
+      if (!privateKey.isEmpty())
+        sshClient.addIdentity(privateKey);
+
+      session = sshClient.getSession(user, server);
+
+      if (!password.isEmpty())
+        session.setPassword(password);
+
+      session.connect();
+
+      String remotefileName = serverFolder + fileName;
+
+      sftpChannel = (ChannelSftp) session.openChannel("sftp");
+      sftpChannel.connect();
+
+      SftpATTRS attr = null;
+
+      // Test if the file exists
       try
       {
-        JSch.setConfig("StrictHostKeyChecking", "no");
-        JSch sshClient = new JSch();
+        attr = sftpChannel.stat(remotefileName);
+      } catch (Exception e)
+      {;}
 
-        // Connect to the sftp server
-        if (!privateKey.isEmpty())
-          sshClient.addIdentity(privateKey);
+      // If the file doesn't exist, exit
+      if (attr == null)
+      	throw new Exception("SFTP Exception. File not found. (server:" + server + ",fileName:" + fileName+ ").");
 
-        session = sshClient.getSession(user, server);
+      String localFilename = localFolder + fileName;
 
-        if (!password.isEmpty())
-          session.setPassword(password);
-
-        session.connect();
-
-        String remotefileName = serverFolder + fileName;
-
-        sftpChannel = (ChannelSftp) session.openChannel("sftp");
-        sftpChannel.connect();
-
-        SftpATTRS attr = null;
-
-        // Test if the file exists
-        try
+      // download the file
+      sftpChannel.get(remotefileName, localFilename);
+      
+      }
+      catch (Exception e)
+      {
+      	throw new Exception("SFTP Transport Exception error. (server:" + server + ").",  e);
+      }
+      finally
+      {
+        if (sftpChannel != null)
         {
-          attr = sftpChannel.stat(remotefileName);
-        } catch (Exception e)
-        {;}
-
-        // If the file doesn't exist, exit
-        if (attr == null)
-        	throw new Exception("SFTP Exception. File not found. (server:" + server + ",fileName:" + fileName+ ").");
-
-        String localFilename = localFolder + fileName;
-
-        // download the file
-        sftpChannel.get(remotefileName, localFilename);
+          sftpChannel.disconnect();
+        }
         
-        }
-        catch (Exception e)
-        {
-        	throw new Exception("SFTP Transport Exception error. (server:" + server + ").",  e);
-        }
-        finally
-        {
-          if (sftpChannel != null)
-          {
-            sftpChannel.disconnect();
-          }
-          
-          if (session != null)
-          	session.disconnect();
-        }
-    }
+        if (session != null)
+        	session.disconnect();
+      }
   }
 }

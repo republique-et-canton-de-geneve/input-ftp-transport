@@ -47,57 +47,55 @@ public class FtpClient
   
   public boolean downloadFile() throws IOException
   {
+    int reply;
+    FTPClient ftp = new FTPClient();
+    	
+    try 
     {
-      int reply;
-      FTPClient ftp = new FTPClient();
-      	
-      try 
+      // Connect to the server
+      ftp.connect(server);
+      ftp.enterLocalPassiveMode();
+      ftp.login(user, password);
+
+      reply = ftp.getReplyCode();
+
+      // Test if we are connected to the server
+      if (!FTPReply.isPositiveCompletion(reply))
       {
-        // Connect to the server
-        ftp.connect(server);
-        ftp.enterLocalPassiveMode();
-        ftp.login(user, password);
+        ftp.disconnect();
+        throw new IOException("FTP server refused connection. (server:" + server + ").");
+      }
+
+      ftp.setFileType(FTP.ASCII_FILE_TYPE);
   
-        reply = ftp.getReplyCode();
-  
-        // Test if we are connected to the server
-        if (!FTPReply.isPositiveCompletion(reply))
-        {
+      String remoteFile = serverFolder + fileName;
+
+      // Test if the file exists on the ftp server
+      FTPFile[] files = ftp.listFiles(remoteFile);
+
+      if (files.length == 0)
+      	throw new IOException("FTP Exception. File does not exist. (server:" + server + ",fileName:" + fileName+ ").");
+      
+      File downloadFile = new File(localFolder  + fileName);
+      
+      OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(downloadFile));
+      boolean success = ftp.retrieveFile(remoteFile, outputStream);
+      outputStream.close();
+
+      ftp.logout();
+      
+      return success;
+
+    }
+    catch (IOException e)
+    {
+  		throw new IOException("FTP Transport Exception error. (server:" + server + ").",  e);
+    }
+    finally
+    {
+      if (ftp.isConnected())
+      {
           ftp.disconnect();
-          throw new IOException("FTP server refused connection. (server:" + server + ").");
-        }
-  
-        ftp.setFileType(FTP.ASCII_FILE_TYPE);
-    
-        String remoteFile = serverFolder + fileName;
-
-        // Test if the file exists on the ftp server
-        FTPFile[] files = ftp.listFiles(remoteFile);
-
-        if (files.length == 0)
-        	throw new IOException("FTP Exception. File does not exist. (server:" + server + ",fileName:" + fileName+ ").");
-        
-        File downloadFile = new File(localFolder  + fileName);
-        
-        OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(downloadFile));
-        boolean success = ftp.retrieveFile(remoteFile, outputStream);
-        outputStream.close();
-  
-        ftp.logout();
-        
-        return success;
-  
-      }
-      catch (IOException e)
-      {
-    		throw new IOException("FTP Transport Exception error. (server:" + server + ").",  e);
-      }
-      finally
-      {
-        if (ftp.isConnected())
-        {
-            ftp.disconnect();
-        }
       }
     }
   }
