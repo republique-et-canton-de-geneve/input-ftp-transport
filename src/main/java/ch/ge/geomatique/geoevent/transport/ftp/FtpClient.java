@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.file.Files;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
@@ -97,14 +96,7 @@ public class FtpClient
       {
         if (ftp.isConnected())
         {
-          try
-          {
             ftp.disconnect();
-          }
-          catch (IOException ioe)
-          {
-          	throw new IOException("FTP Transport Exception error. Impossible to disconnect");
-          }
         }
       }
     }
