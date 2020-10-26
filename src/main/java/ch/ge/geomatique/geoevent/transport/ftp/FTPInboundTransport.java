@@ -234,6 +234,8 @@ public class FTPInboundTransport extends InboundTransportBase implements Runnabl
 		catch (IOException e)
 		{
       LOGGER.error("FTP Transport Exception error. (server:" + server + ").", e);
+      stop();
+      setRunningState(RunningState.ERROR);
 		}
   }
 
@@ -255,6 +257,8 @@ public class FTPInboundTransport extends InboundTransportBase implements Runnabl
 	catch (Exception e)
 	{
     LOGGER.error("SFTP Transport Exception error. (server:" + server + ").", e);
+    stop();
+    setRunningState(RunningState.ERROR);
 	}
  }
 
