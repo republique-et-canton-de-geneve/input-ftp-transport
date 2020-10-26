@@ -1,12 +1,8 @@
 package ch.ge.geomatique.geoevent.transport.ftp;
 
-import java.io.BufferedOutputStream;
 import java.nio.ByteBuffer;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.BufferOverflowException;
-import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -18,10 +14,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.net.ftp.FTP;
-import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPFile;
-import org.apache.commons.net.ftp.FTPReply;
 
 import com.esri.ges.core.component.ComponentException;
 import com.esri.ges.core.component.RunningState;
@@ -30,10 +22,6 @@ import com.esri.ges.framework.i18n.BundleLogger;
 import com.esri.ges.framework.i18n.BundleLoggerFactory;
 import com.esri.ges.transport.InboundTransportBase;
 import com.esri.ges.transport.TransportDefinition;
-import com.jcraft.jsch.ChannelSftp;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.Session;
-import com.jcraft.jsch.SftpATTRS;
 
 
 /**
@@ -214,153 +202,60 @@ public class FTPInboundTransport extends InboundTransportBase implements Runnabl
 
     if (serverFolder.length() > 0 && !serverFolder.endsWith("/"))
       serverFolder += "/";
-
+    
+    
     if (serverType.equals("ftp"))
-      downloadFTPFile();
+    {
+    	downloadFTPFile();
+    }
     else
+    {
       downloadSFTPFile();
+    }
   }
 
   // Download the file from a classic FTP server
   private void downloadFTPFile()
   {
-    int reply;
-    FTPClient ftp = new FTPClient();
-    	
-    try 
-    {
-      // Connect to the server
-      ftp.connect(server);
-      ftp.enterLocalPassiveMode();
-      ftp.login(user, password);
-
-      reply = ftp.getReplyCode();
-
-      // Test if we are connected to the server
-      if (!FTPReply.isPositiveCompletion(reply))
-      {
-        ftp.disconnect();
-        LOGGER.error("FTP server refused connection. (server:" + server + ").");
-        stop();
-        setRunningState(RunningState.ERROR);
-        return;
-      }
-
-      ftp.setFileType(FTP.ASCII_FILE_TYPE);
-  
-      String remoteFile = serverFolder + fileName;
-        
-      // Test if the file exists on the ftp server
-      FTPFile[] files = ftp.listFiles(remoteFile);
-        
-      if (files.length == 0)
-      		return;
-      
-      
-      File downloadFile = new File(localFolder  + fileName);
-      OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(downloadFile));
-      boolean success = ftp.retrieveFile(remoteFile, outputStream);
-      outputStream.close();
-      
+  	FtpClient ftpClient = new FtpClient(server, user, password, serverFolder, fileName, localFolder);
+  	
+		try
+		{
+			boolean success = ftpClient.downloadFile();
+			
+			String localFileName = localFolder + fileName;
+			
       if (success)
       {
-        receive(localFolder + fileName);
-        Files.delete(downloadFile.toPath());
+        receive(localFileName);
+        Files.delete(Paths.get(localFileName));
       }
-
-      ftp.logout();
-
-    }
-  	catch (IOException e)
-    {
+		}
+		catch (IOException e)
+		{
       LOGGER.error("FTP Transport Exception error. (server:" + server + ").", e);
-      stop();
-      setRunningState(RunningState.ERROR);
-    }
-    finally
-    {
-      if (ftp.isConnected())
-      {
-        try
-        {
-          ftp.disconnect();
-        }
-        catch (IOException ioe)
-        {
-          LOGGER.error("FTP Transport Exception error. Impossible to disconnect");
-        }
-      }
-    }
+		}
   }
 
   
 //Download the file from a SFTP server
  private void downloadSFTPFile()
  {
-   Session session = null;
-   ChannelSftp sftpChannel = null;
-   
-   LOGGER.info("Downloading SFTP file");
-   
-   try
-   {
-     JSch.setConfig("StrictHostKeyChecking", "no");
-     JSch sshClient = new JSch();
+ 	SFtpClient sFtpClient = new SFtpClient(server, user, password, serverFolder, fileName, localFolder, privateKey);
 
-     // Connect to the sftp server
-     if (!privateKey.isEmpty())
-       sshClient.addIdentity(privateKey);
-
-     session = sshClient.getSession(user, server);
-
-     if (!password.isEmpty())
-       session.setPassword(password);
-
-     session.connect();
-
-     String remotefileName = serverFolder + fileName;
-
-     sftpChannel = (ChannelSftp) session.openChannel("sftp");
-     sftpChannel.connect();
-
-     SftpATTRS attr = null;
-
-     // Test if the file exists
-     try
-     {
-       attr = sftpChannel.stat(remotefileName);
-     } catch (Exception e)
-     {;}
-
-     // If the file doesn't exist, exit
-     if (attr == null)
-       return;
-
-     String localFilename = localFolder + fileName;
-
-     // download and remove the file
-     sftpChannel.get(remotefileName, localFilename);
-     receive(localFilename);
-     Files.delete(Paths.get(localFilename));
-     
-     }
-     catch (Exception e)
-     {
-       LOGGER.error("SFTP Transport Exception error (server:" + server + ").", e);
-       stop();
-       setRunningState(RunningState.ERROR);
-     }
-     finally
-     {
-       if (sftpChannel != null)
-       {
-         sftpChannel.disconnect();
-       }
-       
-       if (session != null)
-       	session.disconnect();
-     }
-
+	try
+	{
+		sFtpClient.downloadFile();
+		
+		String localFileName = localFolder + fileName;
+    receive(localFileName);
+    
+    Files.delete(Paths.get(localFileName));
+	}
+	catch (Exception e)
+	{
+    LOGGER.error("SFTP Transport Exception error. (server:" + server + ").", e);
+	}
  }
 
 
