@@ -77,10 +77,17 @@ public class FtpClient
       	throw new IOException("FTP Exception. File does not exist. (server:" + server + ",fileName:" + fileName+ ").");
       
       File downloadFile = new File(localFolder  + fileName);
+      boolean success;
       
-      OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(downloadFile));
-      boolean success = ftp.retrieveFile(remoteFile, outputStream);
-      outputStream.close();
+      // Download the file
+      try
+      (
+      		FileOutputStream fr = new FileOutputStream(downloadFile);
+      		OutputStream outputStream = new BufferedOutputStream(fr);
+      )
+      {
+      	success = ftp.retrieveFile(remoteFile, outputStream);
+      }
 
       ftp.logout();
       
