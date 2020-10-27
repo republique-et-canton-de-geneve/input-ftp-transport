@@ -1,9 +1,13 @@
 package ch.ge.geomatique.geoevent.transport.ftp;
 
+import java.io.IOException;
+
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpATTRS;
+import com.jcraft.jsch.SftpException;
 
 
 /**
@@ -42,7 +46,7 @@ public class SFtpClient
   	
   }
   
-  public void downloadFile() throws Exception
+  public void downloadFile() throws IOException
   {
     Session session = null;
     ChannelSftp sftpChannel = null;
@@ -71,15 +75,11 @@ public class SFtpClient
       SftpATTRS attr = null;
 
       // Test if the file exists
-      try
-      {
-        attr = sftpChannel.stat(remotefileName);
-      } catch (Exception e)
-      {;}
+      attr = sftpChannel.stat(remotefileName);
 
       // If the file doesn't exist, exit
       if (attr == null)
-      	throw new Exception("SFTP Exception. File not found. (server:" + server + ",fileName:" + fileName+ ").");
+      	throw new IOException("SFTP Exception. File not found. (server:" + server + ",fileName:" + fileName+ ").");
 
       String localFilename = localFolder + fileName;
 
@@ -87,9 +87,9 @@ public class SFtpClient
       sftpChannel.get(remotefileName, localFilename);
       
       }
-      catch (Exception e)
+      catch (JSchException | SftpException e)
       {
-      	throw new Exception("SFTP Transport Exception error. (server:" + server + ").",  e);
+      	throw new IOException("SFTP Transport Exception error. (server:" + server + ").",  e);
       }
       finally
       {

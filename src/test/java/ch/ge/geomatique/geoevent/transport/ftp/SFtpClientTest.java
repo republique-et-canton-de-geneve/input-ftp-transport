@@ -3,6 +3,7 @@ package ch.ge.geomatique.geoevent.transport.ftp;
 import static org.junit.Assert.*;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.junit.After;
 import org.junit.Before;
@@ -75,7 +76,7 @@ public class SFtpClientTest
 		{
 			SFtpClient.downloadFile();
 		}
-		catch (Exception e)
+		catch (IOException e)
 		{
 			logger.error("Exception when downloading file:", e);
 		}
