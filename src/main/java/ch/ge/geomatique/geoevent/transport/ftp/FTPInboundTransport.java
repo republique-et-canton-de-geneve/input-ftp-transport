@@ -36,13 +36,18 @@ public class FTPInboundTransport extends InboundTransportBase implements Runnabl
   }
 
   static final BundleLogger LOGGER = BundleLoggerFactory.getLogger(FTPInboundTransport.class);
-
+  
+  static final long SECOND_MILLISECONDS = 1000L;
+	static final int FTP_DEFAULT_PORT = 21;
+	static final String SQL_EXCEPTION_DELETE_FILE = "FTP connector. Impossible to delete file : ";
+	static final int RETURN_CHAR = 10;
+	
   // Server type : ftp or sftp
   private String serverType = "";
   // Server name
   private String server = "";
   // Server port
-  private int port = 21;
+  private int port = FTP_DEFAULT_PORT;
   // User name
   private String user = "";
   // User password
@@ -59,11 +64,6 @@ public class FTPInboundTransport extends InboundTransportBase implements Runnabl
   private int frequency = 0;
   // Number of lines to skip in the downloaded file
   private int numberOfLinesToSkip = 0;
-  static final long SECOND_MILLISECONDS = 1000L;
-	static final String SQL_EXCEPTION_DELETE_FILE = "FTP connector. Impossible to delete file : ";
-
-	static final int RETURN_CHAR = 10;
-
 	
   Timer timer;
 

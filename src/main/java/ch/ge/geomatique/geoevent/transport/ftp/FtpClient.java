@@ -33,7 +33,7 @@ public class FtpClient
   // Folder where the file will be downloaded
   private String localFolder = "";
   // FTP port
-  private int port = 21;
+  private int port;
   	
   public FtpClient(String server,String user,String password,String serverFolder,String fileName,String localFolder, int port)
   {
