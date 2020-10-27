@@ -20,9 +20,11 @@ It has the following properties :
 
 # Build and deploy
 
-In order to build the composanant, you need the Geoevent sdk.
+In order to build the composant, you need the Geoevent sdk.
 
 The GeoEvent Server SDK and documentation can be found in the ArcGIS Server installation directory. The default installation directories are below:
 
     Windows: <ArcGIS Server installation directory>\GeoEvent\sdk (for example, C:\Program Files\ArcGIS\Server\GeoEvent\sdk).
     Linux: <ArcGIS Server installation directory>/GeoEvent/sdk (for example, ~/arcgis/server/GeoEvent/sdk).
+
+In these directories, you will find the document 'GeoEvent Developer Guide.pdf', which explains how to build and deploy the composant.
