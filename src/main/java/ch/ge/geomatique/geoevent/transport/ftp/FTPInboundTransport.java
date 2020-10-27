@@ -41,6 +41,8 @@ public class FTPInboundTransport extends InboundTransportBase implements Runnabl
   private String serverType = "";
   // Server name
   private String server = "";
+  // Server port
+  private int port = 21;
   // User name
   private String user = "";
   // User password
@@ -157,6 +159,8 @@ public class FTPInboundTransport extends InboundTransportBase implements Runnabl
     if (properties.get("numberOfLinesToSkip").getValue() != null)
     	numberOfLinesToSkip = (Integer) properties.get("numberOfLinesToSkip").getValue();
     
+    if (properties.get("port").getValue() != null)
+    	port = (Integer) properties.get("port").getValue();
   }
 
   @Override
@@ -217,7 +221,7 @@ public class FTPInboundTransport extends InboundTransportBase implements Runnabl
   // Download the file from a classic FTP server
   private void downloadFTPFile()
   {
-  	FtpClient ftpClient = new FtpClient(server, user, password, serverFolder, fileName, localFolder);
+  	FtpClient ftpClient = new FtpClient(server, user, password, serverFolder, fileName, localFolder, port);
   	
 		try
 		{

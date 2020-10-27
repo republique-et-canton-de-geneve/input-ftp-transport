@@ -38,19 +38,21 @@ public class FtpClientTest
     String fileName;
     String localFolder;
     String remoteFolder;
+    int port;
     
 	@Before
 	// Set up the fake ftp server and create an instance of the ftp client
 	public void setUp() throws Exception
 	{
-        server = "localhost";
-        user = "user";
-        password = "password";
-        serverFolder = "";
-        fileName = "file1.txt";
-        localFolder = "D:\\tmp\\";
-        remoteFolder = "C:\\data";
-        
+    server = "localhost";
+    user = "user";
+    password = "password";
+    serverFolder = "";
+    fileName = "file1.txt";
+    localFolder = "D:\\tmp\\";
+    remoteFolder = "C:\\data";
+    port = 2000;
+    
 		fakeFtpServer = new FakeFtpServer();
 		fakeFtpServer.addUserAccount(new UserAccount(user, password, remoteFolder));
 
@@ -58,14 +60,15 @@ public class FtpClientTest
 		fileSystem.add(new DirectoryEntry(remoteFolder));
 		fileSystem.add(new FileEntry(remoteFolder + "\\" + fileName, "abcdef 1234567890"));
 		fakeFtpServer.setFileSystem(fileSystem);
-
+		fakeFtpServer.setServerControlPort(port);
+		
 		fakeFtpServer.start();
 		
-        File directory = new File(localFolder);
+    File directory = new File(localFolder);
 		if (!directory.exists())
 			directory.mkdir();
 		
-    	ftpClient = new FtpClient(server, user, password, serverFolder, fileName, localFolder);
+    ftpClient = new FtpClient(server, user, password, serverFolder, fileName, localFolder, port);
 
 	}
 

@@ -13,6 +13,11 @@
 			description="Name of the ftp server"
 			propertyType="String" mandatory="true" readOnly="false" defaultValue="" />
 
+		<propertyDefinition propertyName="port"
+			label="Port"
+			description="(S)FTP server port"
+			propertyType="Integer" mandatory="true" readOnly="false" defaultValue="21"/>
+			
 		<propertyDefinition propertyName="user"
 			label="User"
 			description="Login user name"

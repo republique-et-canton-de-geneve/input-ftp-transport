@@ -32,9 +32,10 @@ public class FtpClient
   private String fileName = "";
   // Folder where the file will be downloaded
   private String localFolder = "";
-  
+  // FTP port
+  private int port = 21;
   	
-  public FtpClient(String server,String user,String password,String serverFolder,String fileName,String localFolder)
+  public FtpClient(String server,String user,String password,String serverFolder,String fileName,String localFolder, int port)
   {
   	this.server = server;
   	this.user = user;
@@ -42,6 +43,7 @@ public class FtpClient
   	this.serverFolder = serverFolder;
   	this.fileName = fileName;
   	this.localFolder = localFolder;
+  	this.port = port;
   	
   }
   
@@ -53,7 +55,7 @@ public class FtpClient
     try 
     {
       // Connect to the server
-      ftp.connect(server);
+      ftp.connect(server, port);
       ftp.enterLocalPassiveMode();
       ftp.login(user, password);
 
