@@ -89,7 +89,7 @@ public class FtpClientTest
 		}
 
 		File file = new File(localFolder + fileName);
-		assertTrue(file.exists());
+		assertTrue("File not downloaded with FTP server", file.exists());
 	}
 
 }
