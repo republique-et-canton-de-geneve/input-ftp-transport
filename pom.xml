@@ -15,6 +15,22 @@
 	  <tag>HEAD</tag>
 	</scm>
 	
+	<distributionManagement>
+		<!--
+		 cf settings.xml pour les définitions des repositories 
+		-->
+		<repository>
+			<id>internal.project.release</id>
+			<name>internal.project.release</name>
+			<url>${maven2Repository_projet}/project_release</url>
+		</repository>
+		<snapshotRepository>
+			<id>internal.project.snapshot</id>
+			<name>internal.project.snapshot</name>
+			<url>${maven2Repository_projet}/project_snapshot</url>
+		</snapshotRepository>
+	</distributionManagement>
+	
 	<properties>
 		<maven.bundle.plugin.version>2.3.6</maven.bundle.plugin.version>
 		<junit.version>4.8.1</junit.version>
