@@ -1,7 +1,7 @@
 # input-ftp-transport
 
 The input-ftp-transport allows to download data from a (s)ftp server. It has been tested with Geoevent server 10.6.0.
-It uses Apache Commons Net library to connect to ftp servers, and Jsch for sftp servers.
+It uses **Apache Commons Net library** to connect to ftp servers, and **Jsch** for sftp servers.
 
 It has the following properties :
 
@@ -27,4 +27,4 @@ The GeoEvent Server SDK and documentation can be found in the ArcGIS Server inst
     Windows: <ArcGIS Server installation directory>\GeoEvent\sdk (for example, C:\Program Files\ArcGIS\Server\GeoEvent\sdk).
     Linux: <ArcGIS Server installation directory>/GeoEvent/sdk (for example, ~/arcgis/server/GeoEvent/sdk).
 
-In these directories, you will find the document 'GeoEvent Developer Guide.pdf', which explains how to build and deploy the composant.
+In these directories, you will find the document **GeoEvent Developer Guide.pdf**, which explains how to build and deploy the composant.
