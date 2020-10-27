@@ -33,8 +33,10 @@ public class SFtpClient
   private String localFolder = "";
   // The private key used to authenticate into the ssh server
   private String privateKey = "";
-  	
-  public SFtpClient(String server,String user,String password,String serverFolder,String fileName,String localFolder,String privateKey)
+  // SFTP port
+  private int server_port;
+  
+  public SFtpClient(String server,String user,String password,String serverFolder,String fileName,String localFolder,String privateKey, int port)
   {
   	this.server = server;
   	this.user = user;
@@ -43,7 +45,7 @@ public class SFtpClient
   	this.fileName = fileName;
   	this.localFolder = localFolder;
   	this.privateKey = privateKey;
-  	
+  	this.server_port = port;
   }
   
   public void downloadFile() throws IOException
@@ -60,7 +62,7 @@ public class SFtpClient
       if (!privateKey.isEmpty())
         sshClient.addIdentity(privateKey);
 
-      session = sshClient.getSession(user, server);
+      session = sshClient.getSession(user, server, server_port);
 
       if (!password.isEmpty())
         session.setPassword(password);

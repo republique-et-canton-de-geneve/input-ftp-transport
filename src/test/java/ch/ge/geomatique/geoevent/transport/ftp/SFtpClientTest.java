@@ -28,7 +28,7 @@ public class SFtpClientTest
 		final static Logger logger = LoggerFactory.getLogger(SFtpClientTest.class);
 	
 		@Rule
-		public final FakeSftpServerRule sftpServer = new FakeSftpServerRule().addUser("user", "password").setPort(22);
+		public final FakeSftpServerRule sftpServer = new FakeSftpServerRule();
 	
     private SFtpClient SFtpClient;
     
@@ -39,6 +39,7 @@ public class SFtpClientTest
     String fileName;
     String localFolder;
     String privateKey;
+    int port;
     
 	@Before
 	// Set up the fake sftp server and create an instance of the ftp client
@@ -51,14 +52,17 @@ public class SFtpClientTest
         fileName = "file.txt";
         localFolder = "D:\\tmp\\";
         privateKey = "";
-		
+        port = 2001;
+        
         sftpServer.putFile("/" + fileName, "content of file", UTF_8);
+        sftpServer.addUser(user, password);
+        sftpServer.setPort(port);
         
         File directory = new File(localFolder);
-		if (!directory.exists())
-			directory.mkdir();
+    		if (!directory.exists())
+    			directory.mkdir();
 		 
-        SFtpClient = new SFtpClient(server, user, password, serverFolder, fileName, localFolder, privateKey);
+        SFtpClient = new SFtpClient(server, user, password, serverFolder, fileName, localFolder, privateKey, port);
 	}
 
 	@After

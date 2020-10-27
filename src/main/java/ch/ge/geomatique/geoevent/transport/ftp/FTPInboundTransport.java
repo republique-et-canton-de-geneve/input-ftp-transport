@@ -247,7 +247,7 @@ public class FTPInboundTransport extends InboundTransportBase implements Runnabl
 //Download the file from a SFTP server
  private void downloadSFTPFile()
  {
- 	SFtpClient sFtpClient = new SFtpClient(server, user, password, serverFolder, fileName, localFolder, privateKey);
+ 	SFtpClient sFtpClient = new SFtpClient(server, user, password, serverFolder, fileName, localFolder, privateKey, port);
 
 	try
 	{
