@@ -17,3 +17,12 @@ It has the following properties :
 | Local folder | Folder where the file will be downloaded |
 | Frequency | This is the time in seconds between successive task executions |
 | Number of lines to skip | Number of lines to skip |
+
+# Build and deploy
+
+In order to build the composanant, you need the Geoevent sdk.
+
+The GeoEvent Server SDK and documentation can be found in the ArcGIS Server installation directory. The default installation directories are below:
+
+    Windows: <ArcGIS Server installation directory>\GeoEvent\sdk (for example, C:\Program Files\ArcGIS\Server\GeoEvent\sdk).
+    Linux: <ArcGIS Server installation directory>/GeoEvent/sdk (for example, ~/arcgis/server/GeoEvent/sdk).
