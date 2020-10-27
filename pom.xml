@@ -33,6 +33,7 @@
 	
 	<properties>
 		<maven.bundle.plugin.version>2.3.6</maven.bundle.plugin.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<junit.version>4.8.1</junit.version>
 		<geoeventsdk.version>10.6.0</geoeventsdk.version>
 		<contact.address>melusine.support@etat.ge.ch</contact.address>
