@@ -9,6 +9,7 @@ It has the following properties :
 | ------ | ------ |
 | Server type | Type of the server : ftp or sftp |
 | Server | URL of the ftp server |
+| Port | Port of the ftp server |
 | User | Login user name |
 | Password | User password |
 | Server folder | Folder on the server where the file is stored |
