@@ -1,124 +1,126 @@
 <?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
 
-	 
-	<groupId>ch.ge.geomatique.geoevent.transport</groupId>
-	<artifactId>input-ftp-transport</artifactId>
-	<version>1.0-SNAPSHOT</version>
-	<name>FTP transport</name>
+  <groupId>ch.ge.geomatique.geoevent.transport</groupId>
+  <artifactId>input-ftp-transport</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <name>FTP transport</name>
 
-	<scm>
-	  <connection>scm:git:https://prod.etat-ge.ch/gitlab/DEVELOPPEUR-GEOMATIQUE/geoevent/connecteur/infomobilite/input-ftp-transport.git</connection>
-	  <developerConnection>scm:git:https://prod.etat-ge.ch/gitlab/DEVELOPPEUR-GEOMATIQUE/geoevent/connecteur/infomobilite/input-ftp-transport.git</developerConnection>
-	  <url>https://prod.etat-ge.ch/gitlab/DEVELOPPEUR-GEOMATIQUE/geoevent/connecteur/infomobilite/input-ftp-transport.git</url>
-	  <tag>HEAD</tag>
-	</scm>
-	
-	<distributionManagement>
-		<!--
-		 cf settings.xml pour les définitions des repositories 
-		-->
-		<repository>
-			<id>internal.project.release</id>
-			<name>internal.project.release</name>
-			<url>${maven2Repository_projet}/project_release</url>
-		</repository>
-		<snapshotRepository>
-			<id>internal.project.snapshot</id>
-			<name>internal.project.snapshot</name>
-			<url>${maven2Repository_projet}/project_snapshot</url>
-		</snapshotRepository>
-	</distributionManagement>
-	
-	<properties>
-		<!-- versions of the plugins -->
-		<maven.bundle.plugin.version>2.3.6</maven.bundle.plugin.version>
+  <scm>
+    <connection>scm:git:https://prod.etat-ge.ch/gitlab/DEVELOPPEUR-GEOMATIQUE/geoevent/connecteur/infomobilite/input-ftp-transport.git</connection>
+    <developerConnection>scm:git:https://prod.etat-ge.ch/gitlab/DEVELOPPEUR-GEOMATIQUE/geoevent/connecteur/infomobilite/input-ftp-transport.git</developerConnection>
+    <url>https://prod.etat-ge.ch/gitlab/DEVELOPPEUR-GEOMATIQUE/geoevent/connecteur/infomobilite/input-ftp-transport.git</url>
+    <tag>HEAD</tag>
+  </scm>
 
-		<!-- versions of the JARs -->
-		<geoeventsdk.version>10.6.0</geoeventsdk.version>
-		<jacoco.version>0.8.6</jacoco.version>
-		<junit.version>4.13.1</junit.version>
+  <distributionManagement>
+    <repository>
+      <id>internal.project.release</id>
+      <name>internal.project.release</name>
+      <url>${maven2Repository_projet}/project_release</url>
+    </repository>
+    <snapshotRepository>
+      <id>internal.project.snapshot</id>
+      <name>internal.project.snapshot</name>
+      <url>${maven2Repository_projet}/project_snapshot</url>
+    </snapshotRepository>
+  </distributionManagement>
 
-		<!-- other properties -->
-		<contact.address>melusine.support@etat.ge.ch</contact.address>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.target>1.8</maven.compiler.target>
-		<maven.compiler.source>1.8</maven.compiler.source>
-	</properties>
-	
-	<dependencies>
-		<dependency>
-			<groupId>com.esri.geoevent.sdk</groupId>
-			<artifactId>geoevent-sdk</artifactId>
-			<version>${geoeventsdk.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>commons-net</groupId>
-			<artifactId>commons-net</artifactId>
-			<version>3.6</version>
-		</dependency>
-		<dependency>
-			<groupId>com.jcraft</groupId>
-			<artifactId>jsch</artifactId>
-			<version>0.1.55</version>
-		</dependency>
-		<dependency> 
-		    <groupId>org.mockftpserver</groupId> 
-		    <artifactId>MockFtpServer</artifactId> 
-		    <version>2.7.1</version> 
-		   	<scope>test</scope>
-		</dependency>
-		<dependency>
-		  <groupId>com.github.stefanbirkner</groupId>
-		  <artifactId>fake-sftp-server-rule</artifactId>
-		  <version>2.0.1</version>
-		  <scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-		    <artifactId>slf4j-api</artifactId>
-		    <version>1.6.6</version>
-		    <scope>test</scope>
-		</dependency>
-		<dependency>
-		    <groupId>org.slf4j</groupId>
-		    <artifactId>slf4j-log4j12</artifactId>
-		    <version>1.6.6</version>
-	    	<scope>test</scope>
-		</dependency>
-	</dependencies>
+  <properties>
+    <!-- versions of the plugins -->
+    <maven.bundle.plugin.version>2.3.6</maven.bundle.plugin.version>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.jacoco</groupId>
-				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>${jacoco.version}</version>
-				<executions>
-					<execution>
-						<id>jacoco-prepare-agent</id>
-						<goals>
-							<goal>prepare-agent</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>jacoco-report</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>report</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
-	
+    <!-- versions of the JARs -->
+    <geoeventsdk.version>10.6.0</geoeventsdk.version>
+    <jacoco.version>0.8.6</jacoco.version>
+    <junit.version>4.13.1</junit.version>
+
+    <!-- other properties -->
+    <contact.address>some_support_address@etat.ge.ch</contact.address>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.compiler.source>1.8</maven.compiler.source>
+  </properties>
+
+  <dependencies>
+    <!-- compile dependencies -->
+    <dependency>
+      <groupId>commons-net</groupId>
+      <artifactId>commons-net</artifactId>
+      <version>3.6</version>
+    </dependency>
+    <dependency>
+      <groupId>com.jcraft</groupId>
+      <artifactId>jsch</artifactId>
+      <version>0.1.55</version>
+    </dependency>
+
+    <!-- test dependencies -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockftpserver</groupId>
+      <artifactId>MockFtpServer</artifactId>
+      <version>2.7.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.github.stefanbirkner</groupId>
+      <artifactId>fake-sftp-server-rule</artifactId>
+      <version>2.0.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>1.6.6</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+      <version>1.6.6</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- provided dependencies -->
+    <dependency>
+      <groupId>com.esri.geoevent.sdk</groupId>
+      <artifactId>geoevent-sdk</artifactId>
+      <version>${geoeventsdk.version}</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>${jacoco.version}</version>
+        <executions>
+          <execution>
+            <id>jacoco-prepare-agent</id>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>jacoco-report</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
 </project>
