@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<transport name="ftp-transport" domain="com.esri.geoevent.transport.inbound"	type="inbound">
+<transport name="ftp-transport" domain="com.esri.geoevent.transport.inbound" version="${project.version}"	type="inbound">
 	<description>FTP Transport.</description>
 	<propertyDefinitions>
 			
