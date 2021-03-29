@@ -15,7 +15,7 @@ It has the following properties :
 | Password | User password |
 | Server folder | Folder on the server where the file is stored |
 | Private key | The private key used to authenticate into the ssh server |
-| File format | Format of the file(s) to be downloaded. It can be the name of a single file or with wild characters (*.txt) |
+| File format | Format of the file(s) to be downloaded. It can be the name of a single file or a filter with wild characters. For instance : *.txt |
 | Local folder | Folder where the file will be downloaded |
 | Delete files | Boolean which specifies if the files downloaded in the local folder will be deleted |
 | Frequency | This is the time in seconds between successive task executions |
