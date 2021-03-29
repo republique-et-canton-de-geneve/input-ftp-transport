@@ -52,6 +52,11 @@
 			description="Folder where the file will be downloaded"
 			propertyType="String" mandatory="true" readOnly="false" defaultValue="" />
 		
+		<propertyDefinition propertyName="deleteFiles"
+			label="Delete files"
+			description="Delete files in the local folder"
+			propertyType="Boolean" mandatory="true" readOnly="false" defaultValue="true" />
+			
 		<propertyDefinition propertyName="frequency"
 			label="Frequency"
 			description="This is the time in seconds between successive task executions"

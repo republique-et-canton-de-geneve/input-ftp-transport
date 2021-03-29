@@ -78,6 +78,8 @@ public class FTPInboundTransport extends InboundTransportBase implements Runnabl
     private String privateKey = "";
     // Folder where the file will be downloaded
     private String localFolder = "";
+    // Delete files in the local folder
+    private boolean deleteFiles;
     // This is the time in seconds between successive task executions
     private int frequency = 0;
     // Number of lines to skip in the downloaded file
@@ -177,6 +179,8 @@ public class FTPInboundTransport extends InboundTransportBase implements Runnabl
 
 	if (properties.get("port").getValue() != null)
 	    port = (Integer) properties.get("port").getValue();
+	
+	deleteFiles = (Boolean) properties.get("deleteFiles").getValue();;
     }
 
     @Override
@@ -247,7 +251,8 @@ public class FTPInboundTransport extends InboundTransportBase implements Runnabl
 		String localFileName = localFolder + file;
 		receive(localFileName);
 		
-		Files.delete(Paths.get(localFileName));
+		if (deleteFiles)
+		    Files.delete(Paths.get(localFileName));
 	    }
 	} catch (IOException e)
 	{
@@ -272,7 +277,8 @@ public class FTPInboundTransport extends InboundTransportBase implements Runnabl
 		String localFileName = localFolder + file;
 		receive(localFileName);
 
-		Files.delete(Paths.get(localFileName));
+		if (deleteFiles)
+		    Files.delete(Paths.get(localFileName));
 	    }
 	} catch (Exception e)
 	{
