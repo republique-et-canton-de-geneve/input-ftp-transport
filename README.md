@@ -1,7 +1,8 @@
 # input-ftp-transport
 
-The input-ftp-transport allows to download data from a (s)ftp server. It has been tested with Geoevent server 10.6.0.
+The input-ftp-transport allows to download data from a (s)ftp server. It has been tested with Geoevent server 10.8.1.
 It uses **Apache Commons Net library** to connect to ftp servers, and **Jsch** for sftp servers.
+If the files downloaded are csv or xml files, you can use standard Geoevent adapters. For other formats, you have to create a custom adapter.
 
 It has the following properties :
 
@@ -14,7 +15,7 @@ It has the following properties :
 | Password | User password |
 | Server folder | Folder on the server where the file is stored |
 | Private key | The private key used to authenticate into the ssh server |
-| File format | Format of the file(s) that will be downloaded. It can be the name of a single file or with wild characters (*.txt) |
+| File format | Format of the file(s) to be downloaded. It can be the name of a single file or with wild characters (*.txt) |
 | Local folder | Folder where the file will be downloaded |
 | Delete files | Boolean which specifies if the files downloaded in the local folder will be deleted |
 | Frequency | This is the time in seconds between successive task executions |
