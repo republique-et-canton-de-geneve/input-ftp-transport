@@ -22,6 +22,8 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
@@ -36,81 +38,96 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
-* The FtpClientTest class is a Junit test case which connects to a ftp server and downloads a file
-*
-* @author  Philippe De Pol
-* @version 1.0
-* @since   21.10.2020
-*/
+ * The FtpClientTest class is a Junit test case which connects to a ftp server
+ * and downloads a file
+ *
+ * @author Philippe De Pol
+ * @version 1.0
+ * @since 21.10.2020
+ */
 public class FtpClientTest
 {
-		final static Logger logger = LoggerFactory.getLogger(FtpClientTest.class);
+    final static Logger logger = LoggerFactory.getLogger(FtpClientTest.class);
     private FakeFtpServer fakeFtpServer;
-    
+
     private FtpClient ftpClient;
-    
+
     String server;
     String user;
     String password;
     String serverFolder;
-    String fileName;
+    String fileName1;
+    String fileName2;
+    String fileName3;
+    String fileFormat;
     String localFolder;
     String remoteFolder;
     int port;
-    
-	@Before
-	// Set up the fake ftp server and create an instance of the ftp client
-	public void setUp() throws Exception
+
+    @Before
+    // Set up the fake ftp server and create an instance of the ftp client
+    public void setUp() throws Exception
+    {
+	server = "localhost";
+	user = "user";
+	password = "password";
+	serverFolder = "";
+	fileName1 = "file1.txt";
+	fileName2 = "file2.txt";
+	fileName3 = "file3.txt";
+	fileFormat = "*.txt";
+	localFolder = "D:\\tmp\\";
+	remoteFolder = "C:\\data";
+	port = 2000;
+
+	fakeFtpServer = new FakeFtpServer();
+	fakeFtpServer.addUserAccount(new UserAccount(user, password, remoteFolder));
+
+	FileSystem fileSystem = new WindowsFakeFileSystem();
+	fileSystem.add(new DirectoryEntry(remoteFolder));
+	fileSystem.add(new FileEntry(remoteFolder + "\\" + fileName1, "content 1"));
+	fileSystem.add(new FileEntry(remoteFolder + "\\" + fileName2, "content 2"));
+	fileSystem.add(new FileEntry(remoteFolder + "\\" + fileName3, "content 3"));
+	fakeFtpServer.setFileSystem(fileSystem);
+	fakeFtpServer.setServerControlPort(port);
+
+	fakeFtpServer.start();
+
+	File directory = new File(localFolder);
+	if (!directory.exists())
+	    directory.mkdir();
+
+	ftpClient = new FtpClient(server, user, password, serverFolder, fileFormat, localFolder, port);
+
+    }
+
+    @After
+    public void tearDown() throws Exception
+    {
+    }
+
+    @Test
+    public void testDownloadFiles()
+    {
+	List<String> files = new ArrayList<>();
+	
+	try
 	{
-    server = "localhost";
-    user = "user";
-    password = "password";
-    serverFolder = "";
-    fileName = "file1.txt";
-    localFolder = "D:\\tmp\\";
-    remoteFolder = "C:\\data";
-    port = 2000;
-    
-		fakeFtpServer = new FakeFtpServer();
-		fakeFtpServer.addUserAccount(new UserAccount(user, password, remoteFolder));
-
-		FileSystem fileSystem = new WindowsFakeFileSystem();
-		fileSystem.add(new DirectoryEntry(remoteFolder));
-		fileSystem.add(new FileEntry(remoteFolder + "\\" + fileName, "abcdef 1234567890"));
-		fakeFtpServer.setFileSystem(fileSystem);
-		fakeFtpServer.setServerControlPort(port);
-		
-		fakeFtpServer.start();
-		
-    File directory = new File(localFolder);
-		if (!directory.exists())
-			directory.mkdir();
-		
-    ftpClient = new FtpClient(server, user, password, serverFolder, fileName, localFolder, port);
-
-	}
-
-	@After
-	public void tearDown() throws Exception
+	    files = ftpClient.downloadFiles();
+	} catch (IOException e)
 	{
-		// Delete the downloaded file
-		File file = new File(localFolder + fileName);
-		file.delete();
+	    logger.error("Exception when downloading file:", e);
 	}
 
-	@Test
-	public void testDownloadFile() {
-		try
-		{
-			ftpClient.downloadFile();
-		}
-		catch (IOException e)
-		{
-			logger.error("Exception when downloading file:", e);
-		}
-
-		File file = new File(localFolder + fileName);
-		assertTrue("File not downloaded with FTP server", file.exists());
+	// Test we have 3 files downloaded
+	assertEquals(3, files.size());
+	
+	// Test if each file exists
+	for (String fileName : files)
+	{
+	    File file = new File(localFolder + fileName);
+	    assertTrue("File not downloaded with FTP server", file.exists());
 	}
+    }
 
 }

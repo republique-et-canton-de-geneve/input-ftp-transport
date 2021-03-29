@@ -22,6 +22,8 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
@@ -35,76 +37,91 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import com.github.stefanbirkner.fakesftpserver.rule.FakeSftpServerRule;
 
 /**
-* The SFtpClientTest class is a Junit test case which connects to a sftp server and downloads a file
-*
-* @author  Philippe De Pol
-* @version 1.0
-* @since   21.10.2020
-*/
+ * The SFtpClientTest class is a Junit test case which connects to a sftp server
+ * and downloads a file
+ *
+ * @author Philippe De Pol
+ * @version 1.0
+ * @since 21.10.2020
+ */
 public class SFtpClientTest
 {
-		final static Logger logger = LoggerFactory.getLogger(SFtpClientTest.class);
-	
-		@Rule
-		public final FakeSftpServerRule sftpServer = new FakeSftpServerRule();
-	
+    final static Logger logger = LoggerFactory.getLogger(SFtpClientTest.class);
+
+    @Rule
+    public final FakeSftpServerRule sftpServer = new FakeSftpServerRule();
+
     private SFtpClient SFtpClient;
-    
+
     String server;
     String user;
     String password;
     String serverFolder;
-    String fileName;
+    String fileName1;
+    String fileName2;
+    String fileName3;
+    String fileFormat;
     String localFolder;
     String privateKey;
     int port;
-    
-	@Before
-	// Set up the fake sftp server and create an instance of the ftp client
-	public void setUp() throws Exception
+
+    @Before
+    // Set up the fake sftp server and create an instance of the ftp client
+    public void setUp() throws Exception
+    {
+	server = "localhost";
+	user = "user";
+	password = "password";
+	serverFolder = "";
+	fileName1 = "file1.txt";
+	fileName2 = "file2.txt";
+	fileName3 = "file3.txt";
+	fileFormat = "*.txt";
+	localFolder = "D:\\tmp\\";
+	privateKey = "";
+	port = 2001;
+
+	sftpServer.putFile("/" + fileName1, "content of file 1", UTF_8);
+	sftpServer.putFile("/" + fileName2, "content of file 2 ", UTF_8);
+	sftpServer.putFile("/" + fileName3, "content of file 3", UTF_8);
+	sftpServer.addUser(user, password);
+	sftpServer.setPort(port);
+
+	File directory = new File(localFolder);
+	if (!directory.exists())
+	    directory.mkdir();
+
+	SFtpClient = new SFtpClient(server, user, password, serverFolder, fileFormat, localFolder, privateKey, port);
+    }
+
+    @After
+    public void tearDown() throws Exception
+    {
+    }
+
+    @Test
+    public void testDownloadFile()
+    {
+	List<String> files = new ArrayList<>();
+
+	try
 	{
-        server = "localhost";
-        user = "user";
-        password = "password";
-        serverFolder = "";
-        fileName = "file.txt";
-        localFolder = "D:\\tmp\\";
-        privateKey = "";
-        port = 2001;
-        
-        sftpServer.putFile("/" + fileName, "content of file", UTF_8);
-        sftpServer.addUser(user, password);
-        sftpServer.setPort(port);
-        
-        File directory = new File(localFolder);
-    		if (!directory.exists())
-    			directory.mkdir();
-		 
-        SFtpClient = new SFtpClient(server, user, password, serverFolder, fileName, localFolder, privateKey, port);
+	    files = SFtpClient.downloadFiles();
+	} catch (IOException e)
+	{
+	    logger.error("Exception when downloading file:", e);
 	}
 
-	@After
-	public void tearDown() throws Exception
+	// Test we have 3 files downloaded
+	assertEquals(3, files.size());
+	
+	// Test if each file exists
+	for (String fileName : files)
 	{
-		// Delete the downloaded file
-		File file = new File(localFolder + fileName);
-		file.delete();
+	    File file = new File(localFolder + fileName);
+	    assertTrue("File not downloaded with SFTP server", file.exists());
 	}
 
-	@Test
-	public void testDownloadFile()
-	{
-		try
-		{
-			SFtpClient.downloadFile();
-		}
-		catch (IOException e)
-		{
-			logger.error("Exception when downloading file:", e);
-		}
-
-		File file = new File(localFolder + fileName);
-		assertTrue("File not downloaded with SFTP server", file.exists());
-	}
+    }
 
 }

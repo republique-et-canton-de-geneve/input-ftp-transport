@@ -1,5 +1,5 @@
 /*
- * input-ftp-transport
+ * parking-input-ftp-transport
  *
  * Copyright (C) 2019 - 2020 République et Canton de Genève
  *
@@ -19,106 +19,105 @@
 package ch.ge.geomatique.geoevent.transport.ftp;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
 
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
-import com.jcraft.jsch.SftpATTRS;
 import com.jcraft.jsch.SftpException;
 
 /**
-* The SFtpClient class allows to connect to a sftp server and downloads a file
-*
-* @author  Philippe De Pol
-* @version 1.0
-* @since   21.10.2020
-*/
+ * The SFtpClient class allows to connect to a sftp server and downloads a file
+ *
+ * @author Philippe De Pol
+ * @version 1.1
+ * @since 25.03.2021
+ */
 public class SFtpClient
 {
-  // Server name
-  private String server = "";
-  // User name
-  private String user = "";
-  // User password
-  private String password = "";
-  // Folder on the server where the file is stored
-  private String serverFolder = "";
-  // Name of the file that will be downloaded
-  private String fileName = "";
-  // Folder where the file will be downloaded
-  private String localFolder = "";
-  // The private key used to authenticate into the ssh server
-  private String privateKey = "";
-  // SFTP port
-  private int port;
-  
-  public SFtpClient(String server,String user,String password,String serverFolder,String fileName,String localFolder,String privateKey, int port)
-  {
-  	this.server = server;
-  	this.user = user;
-  	this.password = password;
-  	this.serverFolder = serverFolder;
-  	this.fileName = fileName;
-  	this.localFolder = localFolder;
-  	this.privateKey = privateKey;
-  	this.port = port;
-  }
-  
-  public void downloadFile() throws IOException
-  {
-    Session session = null;
-    ChannelSftp sftpChannel = null;
-    
-    try
+    // Server name
+    private String server = "";
+    // User name
+    private String user = "";
+    // User password
+    private String password = "";
+    // Folder on the server where the file is stored
+    private String serverFolder = "";
+    // Name of the file that will be downloaded
+    private String fileFormat = "";
+    // Folder where the file will be downloaded
+    private String localFolder = "";
+    // The private key used to authenticate into the ssh server
+    private String privateKey = "";
+    // SFTP port
+    private int port;
+
+    public SFtpClient(String server, String user, String password, String serverFolder, String fileFormat, String localFolder, String privateKey, int port)
     {
-      JSch.setConfig("StrictHostKeyChecking", "no");
-      JSch sshClient = new JSch();
+	this.server = server;
+	this.user = user;
+	this.password = password;
+	this.serverFolder = serverFolder;
+	this.fileFormat = fileFormat;
+	this.localFolder = localFolder;
+	this.privateKey = privateKey;
+	this.port = port;
+    }
 
-      // Connect to the sftp server
-      if (!privateKey.isEmpty())
-        sshClient.addIdentity(privateKey);
+    public List<String> downloadFiles() throws IOException
+    {
+	Session session = null;
+	ChannelSftp sftpChannel = null;
+	// List of all file names downloaded
+	List<String> fileNames = new ArrayList<>();
 
-      session = sshClient.getSession(user, server, port);
+	try
+	{
+	    JSch.setConfig("StrictHostKeyChecking", "no");
+	    JSch sshClient = new JSch();
 
-      if (!password.isEmpty())
-        session.setPassword(password);
+	    // Connect to the sftp server
+	    if (!privateKey.isEmpty())
+		sshClient.addIdentity(privateKey);
 
-      session.connect();
+	    session = sshClient.getSession(user, server, port);
 
-      String remotefileName = serverFolder + fileName;
+	    if (!password.isEmpty())
+		session.setPassword(password);
 
-      sftpChannel = (ChannelSftp) session.openChannel("sftp");
-      sftpChannel.connect();
+	    session.connect();
 
-      SftpATTRS attr = null;
+	    sftpChannel = (ChannelSftp) session.openChannel("sftp");
+	    sftpChannel.connect();
+	    
+	    @SuppressWarnings("unchecked")
+	    // Get list of wanted files
+	    Vector<ChannelSftp.LsEntry> filelist = sftpChannel.ls(serverFolder + fileFormat);
 
-      // Test if the file exists
-      attr = sftpChannel.stat(remotefileName);
+	    // Download each file in the remote folder
+	    for (ChannelSftp.LsEntry file : filelist)
+	    {
+		sftpChannel.get(serverFolder + file.getFilename(), localFolder + file.getFilename());
+		fileNames.add(file.getFilename());
+	    }
 
-      // If the file doesn't exist, exit
-      if (attr == null)
-      	throw new IOException("SFTP Exception. File not found. (server:" + server + ",fileName:" + fileName+ ").");
+	    return fileNames;
+	    
+	} catch (JSchException | SftpException e)
+	{
+	    throw new IOException("SFTP Transport Exception error. (server:" + server + ").", e);
+	} finally
+	{
+	    if (sftpChannel != null)
+	    {
+		sftpChannel.disconnect();
+	    }
 
-      String localFilename = localFolder + fileName;
-
-      // download the file
-      sftpChannel.get(remotefileName, localFilename);
-      
-      }
-      catch (JSchException | SftpException e)
-      {
-      	throw new IOException("SFTP Transport Exception error. (server:" + server + ").",  e);
-      }
-      finally
-      {
-        if (sftpChannel != null)
-        {
-          sftpChannel.disconnect();
-        }
-        
-        if (session != null)
-        	session.disconnect();
-      }
-  }
+	    if (session != null)
+		session.disconnect();
+	}
+    }
 }

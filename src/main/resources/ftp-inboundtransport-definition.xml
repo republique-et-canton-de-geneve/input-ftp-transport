@@ -42,9 +42,9 @@
 			propertyType="String" mandatory="false" readOnly="false"
 			defaultValue="" />
 
-		<propertyDefinition propertyName="fileName"
-			label="File name"
-			description="Name of the file that will be downloaded"
+		<propertyDefinition propertyName="fileFormat"
+			label="File format"
+			description="The file format of the files we want to download"
 			propertyType="String" mandatory="true" readOnly="false" defaultValue="" />
 
 		<propertyDefinition propertyName="localFolder"
