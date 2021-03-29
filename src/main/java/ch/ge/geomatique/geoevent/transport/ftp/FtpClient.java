@@ -23,6 +23,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -103,7 +105,9 @@ public class FtpClient
 	    // Download each file
 	    for (FTPFile file : files)
 	    {
-		String filename = file.getName();
+		Path path = Paths.get(file.getName());
+		// Get only the file name without the path
+		String filename = path.getFileName().toString();
 		File downloadFile = new File(localFolder + filename);
 
 		try (FileOutputStream fr = new FileOutputStream(downloadFile); OutputStream outputStream = new BufferedOutputStream(fr);)
