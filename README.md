@@ -14,8 +14,9 @@ It has the following properties :
 | Password | User password |
 | Server folder | Folder on the server where the file is stored |
 | Private key | The private key used to authenticate into the ssh server |
-| File name | Name of the file that will be downloaded |
+| File format | Format of the file(s) that will be downloaded |
 | Local folder | Folder where the file will be downloaded |
+| Delete files | Boolean which specifies if the files downloaded in the local folder will be deleted |
 | Frequency | This is the time in seconds between successive task executions |
 | Number of lines to skip | Number of lines to skip |
 
